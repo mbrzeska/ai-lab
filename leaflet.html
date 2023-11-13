@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maps with Leaflet</title>
+    <link rel="stylesheet" href="leaflet-1.7.1/leaflet.css" />
+    <script src="leaflet-1.7.1/leaflet-src.js"></script>
+    <script src="leaflet-1.7.1/leaflet-providers.js"></script>
+    <script src="leaflet-1.7.1/leaflet-image.js"></script>
+
+    <style>
+
+        body{background-color: rgb(16, 14, 29);
+        margin-top: 2%;
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 900px;
+        height: 400px;
+    }
+
+        #map {
+            width: 600px;
+            height: 300px;
+            box-shadow: #eb5df06d 0 5px 15px -3px;
+            margin: 5px 15px;
+        }
+
+        #rasterMap, #board {
+            width: 300px;
+            height: 150px;
+            border: 1px solid blueviolet;
+            overflow: hidden;
+            box-shadow: #eb5df03e 0 5px 15px -3px;
+            margin-bottom: 15px;
+                            
+           
+        }
+
+        #rasterMap{
+            margin-right: 15px;
+            border: 2px solid blueviolet;
+        }
+
+        #board{
+            margin-left: 15px;
+        }
+
+        .drag-target{
+            border: none;
+            box-sizing: border-box; 
+            align-items: center;
+            border: 1px solid blueviolet;
+            box-shadow: #eb5df023 0 5px 15px -3px;
+            
+        }
+        div{
+            display: flex;
+        }
+
+
+        #board{
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            background-color:rgba(137, 43, 226, 0.127)
+
+        }
+
+        button{
+            margin:20px 5px;
+            text-transform: uppercase;
+            border-radius: 30px;
+            padding:8px 18px;
+            border:none;
+            font-weight: bold;
+            background-color: blueviolet;
+            color: aliceblue;
+            box-shadow: #eb5df03f 0 5px 15px -3px;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <button id="getLocation">Moja lokalizacja</button>
+    <button id="saveButton">Pobierz mapę</button>
+
+<div id="contener">
+    <canvas id="rasterMap"></canvas>
+    <br>
+    <div id="board">
+        <div class="drag-target" id="el1"></div>
+        <div class="drag-target" id="el2"></div>  
+        <div class="drag-target" id="el3"></div>
+        <div class="drag-target" id="el4"></div>
+        <div class="drag-target" id="el5"></div>  
+        <div class="drag-target" id="el6"></div>
+        <div class="drag-target" id="el7"></div>
+        <div class="drag-target" id="el8"></div>  
+        <div class="drag-target" id="el9"></div>
+        <div class="drag-target" id="el10"></div>
+        <div class="drag-target" id="el11"></div>  
+        <div class="drag-target" id="el12"></div>
+        <div class="drag-target" id="el13"></div>
+        <div class="drag-target" id="el14"></div>  
+        <div class="drag-target" id="el15"></div>
+        <div class="drag-target" id="el16"></div>
+    </div>
+</div>
+
+    <script>
+        
+        let map = L.map('map').setView([53.430127, 14.564802], 18);
+        L.tileLayer.provider('Esri.WorldImagery').addTo(map);
+        let marker = L.marker([53.430127, 14.564802]).addTo(map);
+        marker.bindPopup("<strong>Hello!</strong><br>This is a popup.");
+
+        document.getElementById("saveButton").addEventListener("click", function () {
+            leafletImage(map, function (err, canvas) {
+                // here we have the canvas
+                let rasterMap = document.getElementById("rasterMap");
+                let rasterContext = rasterMap.getContext("2d");
+
+                rasterContext.drawImage(canvas, 0, 0, 300, 150);
+                let allRectCanvases = [];
+
+                // divide canvas into 16 rectangles
+                let rectWidth = Math.floor(300 / 4);
+                let rectHeight = Math.floor(150 / 4);
+
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        let x = col * rectWidth;
+                        let y = row * rectHeight;
+
+                        let imageData = rasterContext.getImageData(x, y, rectWidth, rectHeight);
+
+                        // create new canvas for each rectangle
+                        let rectCanvas = document.createElement("canvas");
+                        rectCanvas.width = rectWidth;
+                        rectCanvas.height = rectHeight;
+                        let rectContext = rectCanvas.getContext("2d");
+
+                        rectContext.putImageData(imageData, 0, 0);
+
+                        // border
+                        rectContext.strokeStyle = "black"; 
+                        rectContext.lineWidth = 1; 
+                        rectContext.strokeRect(0, 0, rectWidth, rectHeight); 
+
+                        // id, class, and draggable 
+                        rectCanvas.id = "item" +(row * 4 + col + 1); // unique id for each canvas
+                        rectCanvas.classList.add("item", "draggable");
+                        rectCanvas.draggable = true;
+                    
+
+                        allRectCanvases.push(rectCanvas);
+                        shuffleArray(allRectCanvases);
+
+                        // append the new canvas 
+                        allRectCanvases.forEach(function (rectCanvas) {
+                            document.body.appendChild(rectCanvas);
+                        });
+
+                    }
+                }
+            });
+        });
+
+
+    function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+        document.getElementById("getLocation").addEventListener("click", function(event) {
+            if (!navigator.geolocation) {
+                console.log("No geolocation.");
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                console.log(position);
+                let lat = position.coords.latitude;
+                let lon = position.coords.longitude;
+
+                map.setView([lat, lon]);
+            }, positionError => {
+                console.error(positionError);
+            });
+        });
+
+        let dragged;
+
+        document.addEventListener("drag", function (event) {
+            dragged = event.target;
+        });
+
+        document.addEventListener("dragover", function (event) {
+            event.preventDefault();
+        });
+
+        document.addEventListener("drop", function (event) {
+            event.preventDefault();
+
+            if (event.target.classList.contains("drag-target")) {
+                event.target.appendChild(dragged);
+            }
+        });
+
+        //draggable
+        document.addEventListener("DOMContentLoaded", function () {
+            const draggableElements = document.querySelectorAll(".draggable");
+
+            draggableElements.forEach(function (element) {
+                element.addEventListener("dragstart", function (event) {
+                    event.dataTransfer.setData("text/plain", "");
+                });
+            });
+        });
+    </script>
+</body>
+</html>
