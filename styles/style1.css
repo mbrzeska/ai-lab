@@ -34,41 +34,42 @@ body {
 
 
 
+
 .navbar {
-    background-color: #760c8900;
-    color:  #b138c1;
+    color:  #272424;
+    /*box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);*/
     text-align: center;
     display: flex;
     justify-content: center;
+ 
     
 }
 
 .navbar ul {
     list-style-type: none;
     padding: 10px;
+    
 }
 
 .navbar li {
     display: inline;
     margin: 30px;
+    /*text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);*/
     text-transform: uppercase;
-    font-family: 'Georgia';
-   
-    color: #ffffff;
-    background-color: #7772d4ff;
-    border-radius: 30px;;
-    padding:5px 20px;
+    font-family: 'Georgia'; 
+    font-weight: bold;
+    color: #7772d4ff;
     
 }
 
 .navbar li:hover{
-background-color: #43bfe3ff
+color: #43bfe3ff
 
 }
 
 
 .web-content {
-    margin: 50px 15%;
+    margin: 40px 15%;
     padding: 20px 40px;
     background-color: rgba(255, 255, 255, 0);
     display: block;
@@ -119,6 +120,8 @@ p {
     
 }
 
+
+
 .footer p, .footer h3{
     text-align: center;
     color: #fff;
@@ -159,6 +162,7 @@ p {
     margin-right: auto;
     color: #f1f1f1;
     text-align: center;
+    font-size: 16px;
 }
 
 
@@ -179,7 +183,7 @@ img{
     border-radius: 30px; 
     border: 2px;
     border-color: #cccccc;
-    border-style: dashed;
+
     margin: 20px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -214,6 +218,27 @@ ol {
 li{
     font-family: Arial;
 }
+
+
+button{
+    border-radius: 30px; 
+    margin-top: 40px;
+    background-color: #58ace8;
+    border: none;
+    margin-inline-start: 10px;
+    padding: 5px 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin-bottom: 0px;
+
+}
+
+#style1Button{
+    margin-left: 20%;
+}
+
+
 /* VALUES FOR DIFFERENT SCREEN*/
 
 
