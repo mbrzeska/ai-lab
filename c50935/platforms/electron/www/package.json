@@ -1,0 +1,11 @@
+{
+  "main": "cdv-electron-main.js",
+  "name": "io.cordova.hellocordova",
+  "displayName": "Pogodynka",
+  "version": "1.0.0",
+  "description": "Program do sprawdzania pogody w okreslonej lokalizacji",
+  "homepage": "https://cordova.io",
+  "license": "Apache-2.0",
+  "author": "Martyna Brzeska",
+  "dependencies": {}
+}
